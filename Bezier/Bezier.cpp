@@ -31,6 +31,7 @@ private:
 
     Mesh* geometry;
     Mesh* geometry1;
+    Mesh* geometry2;
 
     static const uint MaxVertex = 10000;
     Vertex controle[MaxVertex];
@@ -41,6 +42,9 @@ private:
     Vertex curva[dots*100];
     bool curve = false;
     uint curve_count = 0;
+
+    Vertex auxiliares[MaxVertex];
+    uint aux_count = 0;
 
 public:
     void Init();
@@ -68,6 +72,7 @@ void Bezier::Init()
     // cria malha 3D
     geometry = new Mesh(vbSize, sizeof(Vertex));
     geometry1 = new Mesh(vbSize, sizeof(Vertex));
+    geometry2 = new Mesh(vbSize, sizeof(Vertex));
 
     // ---------------------------------------
 
@@ -128,6 +133,7 @@ void Bezier::Update()
         curve_count++;
         graphics->ResetCommands();
         graphics->Copy(curva, geometry1->vertexBufferSize, geometry1->vertexBufferUpload, geometry1->vertexBufferGPU);
+        graphics->Copy(auxiliares, geometry2->vertexBufferSize, geometry2->vertexBufferUpload, geometry2->vertexBufferGPU);
         graphics->SubmitCommands();
         curve = true;
         Display();
@@ -144,11 +150,13 @@ void Bezier::Display()
 
     // submete comandos de configuração do pipeline
     graphics->CommandList()->SetGraphicsRootSignature(rootSignature);
-    
-    graphics->CommandList()->SetPipelineState(pipelineState);
+
     graphics->CommandList()->IASetVertexBuffers(0, 1, geometry->VertexBufferView());
     graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
     graphics->CommandList()->DrawInstanced(count, 1, 0, 0);
+    
+    graphics->CommandList()->IASetVertexBuffers(0, 1, geometry2->VertexBufferView());
+    graphics->CommandList()->DrawInstanced(aux_count, 1, 0, 0);
 
     graphics->CommandList()->IASetVertexBuffers(0, 1, geometry1->VertexBufferView());
     graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
@@ -328,6 +336,11 @@ void Bezier::CubicCurve() {
         pontos[1].y = pontos[0].y + vectorY;
 
         // TO-DO: mostrar ponto auxiliar
+        auxiliares[aux_count] = { pontos[0], XMFLOAT4(Colors::Red)};
+        aux_count = (aux_count + 1) % MaxVertex;
+        
+        auxiliares[aux_count] = { pontos[1], XMFLOAT4(Colors::Black)};
+        aux_count = (aux_count + 1) % MaxVertex;
     }
 
     int i = curve_count * dots;
