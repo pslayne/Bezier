@@ -1,0 +1,12 @@
+﻿  Curves.cpp
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Curves\Curves.cpp(309,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Curves\Curves.cpp(310,16): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Curves\Curves.cpp(315,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Curves\Curves.cpp(316,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Curves\Curves.cpp(317,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Curves\Curves.cpp(318,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Curves\Curves.cpp(323,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Curves\Curves.cpp(324,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Curves\Curves.cpp(325,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Curves\Curves.cpp(326,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+  Curves.vcxproj -> C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\x64\Debug\Curves.exe
