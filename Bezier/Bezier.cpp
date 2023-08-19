@@ -38,12 +38,22 @@ private:
     uint count = 0;
     uint index = 0;
     
+    Vertex controleBuffer[MaxVertex];
+    uint countBuffer = 0;
+    uint indexBuffer = 0;
+    
     static const int dots = 101;
     Vertex curva[dots*100];
-    uint curve_count = 0;
+    uint curveCount = 0;
+    
+    Vertex curvaBuffer[dots*100];
+    uint curveCountBuffer = 0;
 
     Vertex auxiliares[MaxVertex];
-    uint aux_count = 0;
+    uint auxCount = 0;
+
+    Vertex auxiliaresBuffer[MaxVertex];
+    uint auxCountBuffer = 0;
 
 public:
     void Init();
@@ -94,9 +104,52 @@ void Bezier::Update()
     if (input->KeyPress(VK_DELETE)) {
         count = 0;
         index = 0;
-        curve_count = 0;
-        aux_count = 0;
+        curveCount = 0;
+        auxCount = 0;
         graphics->ResetCommands();
+        Display();
+    }
+
+    if (input->KeyPress('S')) {
+        for (int i = 0; i < count; i++) {
+            controleBuffer[i] = controle[i];
+        }
+        countBuffer = count;
+        indexBuffer = index;
+
+        for (int i = 0; i < curveCount; i++) {
+            curvaBuffer[i] = curva[i];
+        }
+        curveCountBuffer = curveCount;
+
+        for (int i = 0; i < auxCount; i++) {
+            auxiliaresBuffer[i] = auxiliares[i];
+        }
+        auxCountBuffer = auxCount;
+    }
+
+    if (input->KeyPress('L')) {
+        for (int i = 0; i < countBuffer; i++) {
+            controle[i] = controleBuffer[i];
+        }
+        count = countBuffer;
+        index = indexBuffer;
+
+        for (int i = 0; i < curveCountBuffer; i++) {
+            curva[i] = curvaBuffer[i];
+        }
+        curveCount = curveCountBuffer;
+
+        for (int i = 0; i < auxCountBuffer; i++) {
+            auxiliares[i] = auxiliaresBuffer[i];
+        }
+        auxCount = auxCountBuffer;
+
+        graphics->ResetCommands();
+        graphics->Copy(controle, geometry->vertexBufferSize, geometry->vertexBufferUpload, geometry->vertexBufferGPU);
+        graphics->Copy(curva, geometry1->vertexBufferSize, geometry1->vertexBufferUpload, geometry1->vertexBufferGPU);
+        graphics->Copy(auxiliares, geometry2->vertexBufferSize, geometry2->vertexBufferUpload, geometry2->vertexBufferGPU);
+        graphics->SubmitCommands();
         Display();
     }
 
@@ -129,7 +182,7 @@ void Bezier::Update()
 
     if (input->KeyPress('B') && count >= 4 && count % 2 == 0) {
         CubicCurve();
-        curve_count++;
+        curveCount++;
         graphics->ResetCommands();
         graphics->Copy(curva, geometry1->vertexBufferSize, geometry1->vertexBufferUpload, geometry1->vertexBufferGPU);
         graphics->Copy(auxiliares, geometry2->vertexBufferSize, geometry2->vertexBufferUpload, geometry2->vertexBufferGPU);
@@ -154,11 +207,11 @@ void Bezier::Display()
     graphics->CommandList()->DrawInstanced(count, 1, 0, 0);
     
     graphics->CommandList()->IASetVertexBuffers(0, 1, geometry2->VertexBufferView());
-    graphics->CommandList()->DrawInstanced(aux_count, 1, 0, 0);
+    graphics->CommandList()->DrawInstanced(auxCount, 1, 0, 0);
 
     graphics->CommandList()->IASetVertexBuffers(0, 1, geometry1->VertexBufferView());
     graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
-    graphics->CommandList()->DrawInstanced(dots * curve_count, curve_count, 0, dots);
+    graphics->CommandList()->DrawInstanced(dots * curveCount, curveCount, 0, dots);
 
     // apresenta backbuffer
     graphics->Present();    
@@ -316,7 +369,7 @@ void Bezier::CubicCurve() {
         controle[index - 1].Pos,
     };
 
-    if (curve_count >= 1) {
+    if (curveCount >= 1) {
         // troca pontos[0] e [1]
 
         XMFLOAT3 aux = pontos[0];
@@ -334,14 +387,14 @@ void Bezier::CubicCurve() {
         pontos[1].y = pontos[0].y + vectorY;
 
         // TO-DO: mostrar ponto auxiliar
-        auxiliares[aux_count] = { pontos[0], XMFLOAT4(Colors::Red)};
-        aux_count = (aux_count + 1) % MaxVertex;
+        auxiliares[auxCount] = { pontos[0], XMFLOAT4(Colors::Red)};
+        auxCount = (auxCount + 1) % MaxVertex;
         
-        auxiliares[aux_count] = { pontos[1], XMFLOAT4(Colors::Black)};
-        aux_count = (aux_count + 1) % MaxVertex;
+        auxiliares[auxCount] = { pontos[1], XMFLOAT4(Colors::Black)};
+        auxCount = (auxCount + 1) % MaxVertex;
     }
 
-    int i = curve_count * dots;
+    int i = curveCount * dots;
     float d = (float) dots;
     float barrier = d / (d - 1.0);
     float step = barrier - 1.0;
