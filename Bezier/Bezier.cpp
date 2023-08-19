@@ -40,7 +40,6 @@ private:
     
     static const int dots = 101;
     Vertex curva[dots*100];
-    bool curve = false;
     uint curve_count = 0;
 
     Vertex auxiliares[MaxVertex];
@@ -96,6 +95,7 @@ void Bezier::Update()
         count = 0;
         index = 0;
         curve_count = 0;
+        aux_count = 0;
         graphics->ResetCommands();
         Display();
     }
@@ -123,7 +123,6 @@ void Bezier::Update()
         graphics->ResetCommands();
         graphics->Copy(controle, geometry->vertexBufferSize, geometry->vertexBufferUpload, geometry->vertexBufferGPU);
         graphics->SubmitCommands();
-        curve = false;
 
         Display();
     }
@@ -135,7 +134,6 @@ void Bezier::Update()
         graphics->Copy(curva, geometry1->vertexBufferSize, geometry1->vertexBufferUpload, geometry1->vertexBufferGPU);
         graphics->Copy(auxiliares, geometry2->vertexBufferSize, geometry2->vertexBufferUpload, geometry2->vertexBufferGPU);
         graphics->SubmitCommands();
-        curve = true;
         Display();
     }
 }
