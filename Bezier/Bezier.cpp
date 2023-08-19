@@ -301,12 +301,30 @@ void Bezier::BuildPipelineState()
 
 void Bezier::CubicCurve() {
     // P1: index - 4 | P2: index - 3 | P3: index - 2 | P4: index - 1
-    XMFLOAT3 pontos[] = {
+    XMFLOAT3 pontos[4] = {
         controle[index - 4].Pos,
         controle[index - 3].Pos,
         controle[index - 2].Pos,
-        controle[index - 1].Pos
+        controle[index - 1].Pos,
     };
+
+    if (curve_count >= 1) {
+        // troca pontos[0] e [1]
+
+        XMFLOAT3 aux = pontos[0];
+        pontos[0] = pontos[1];
+        pontos[1] = aux;
+
+        // espelha novo pontos[1] em relação a [0]
+        float vectorX = pontos[1].x - pontos[0].x;
+        float vectorY = pontos[1].y - pontos[0].y;
+
+        vectorX *= -1;
+        vectorY *= -1;
+
+        pontos[1].x = pontos[0].x + vectorX;
+        pontos[1].y = pontos[0].y + vectorY;
+    }
 
     int i = curve_count * dots;
     float d = (float) dots;
