@@ -28,7 +28,7 @@ class Bezier : public App
 private:
     ID3D12RootSignature* rootSignature;
     ID3D12PipelineState* pipelineState;
-    ID3D12PipelineState* pipelineState1;
+
     Mesh* geometry;
     Mesh* geometry1;
 
@@ -140,7 +140,6 @@ void Bezier::Display()
 {
     // limpa backbuffer
     graphics->Clear(pipelineState);
-    graphics->Clear(pipelineState1);
 
 
     // submete comandos de configuração do pipeline
@@ -151,7 +150,6 @@ void Bezier::Display()
     graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
     graphics->CommandList()->DrawInstanced(count, 1, 0, 0);
 
-    graphics->CommandList()->SetPipelineState(pipelineState1);
     graphics->CommandList()->IASetVertexBuffers(0, 1, geometry1->VertexBufferView());
     graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
     graphics->CommandList()->DrawInstanced(dots * curve_count, curve_count, 0, dots);
@@ -166,7 +164,6 @@ void Bezier::Finalize()
 {
     rootSignature->Release();
     pipelineState->Release();
-    pipelineState1->Release();
     delete geometry;
 }
 
@@ -299,8 +296,6 @@ void Bezier::BuildPipelineState()
     pso.SampleDesc.Quality = graphics->Quality();
     
     graphics->Device()->CreateGraphicsPipelineState(&pso, IID_PPV_ARGS(&pipelineState));
-
-    graphics->Device()->CreateGraphicsPipelineState(&pso, IID_PPV_ARGS(&pipelineState1));
 
     vertexShader->Release();
     pixelShader->Release();

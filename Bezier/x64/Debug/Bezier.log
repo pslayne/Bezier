@@ -1,13 +1,13 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: O diretório intermediário (x64\Debug\) contém arquivos compartilhados de outro projeto (Curves.vcxproj). Isso pode levar a um comportamento incorreto de limpeza e recompilação.
   Bezier.cpp
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(340,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(341,16): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(346,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(347,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(348,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(349,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(354,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
 C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(355,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(356,16): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(361,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(362,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(363,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(364,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(369,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(370,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(371,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(372,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(356,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\Bezier\Bezier.cpp(357,19): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
   Bezier.vcxproj -> C:\Users\Usuario\Desktop\materiais de aula\UFERSA - CC\9º semestre\CG\labs\Lab09\Curves\x64\Debug\Bezier.exe
