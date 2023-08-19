@@ -55,6 +55,8 @@ private:
     Vertex auxiliaresBuffer[MaxVertex];
     uint auxCountBuffer = 0;
 
+    bool calcCurve = false;
+
 public:
     void Init();
     void Update();
@@ -169,24 +171,28 @@ void Bezier::Update()
         if (count < MaxVertex)
             ++count;
 
+        if (count == 4)
+            calcCurve = true;
+        else if (count > 4)
+            calcCurve = !calcCurve;
+
         controle[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::Red) };
         index = (index + 1) % MaxVertex;
 
         // copia vértices para o buffer da GPU usando o buffer de Upload
         graphics->ResetCommands();
         graphics->Copy(controle, geometry->vertexBufferSize, geometry->vertexBufferUpload, geometry->vertexBufferGPU);
+        
+        if (calcCurve) {
+            CubicCurve();
+            curveCount++;
+            
+            graphics->Copy(curva, geometry1->vertexBufferSize, geometry1->vertexBufferUpload, geometry1->vertexBufferGPU);
+            graphics->Copy(auxiliares, geometry2->vertexBufferSize, geometry2->vertexBufferUpload, geometry2->vertexBufferGPU);
+        }
+       
         graphics->SubmitCommands();
 
-        Display();
-    }
-
-    if (input->KeyPress('B') && count >= 4 && count % 2 == 0) {
-        CubicCurve();
-        curveCount++;
-        graphics->ResetCommands();
-        graphics->Copy(curva, geometry1->vertexBufferSize, geometry1->vertexBufferUpload, geometry1->vertexBufferGPU);
-        graphics->Copy(auxiliares, geometry2->vertexBufferSize, geometry2->vertexBufferUpload, geometry2->vertexBufferGPU);
-        graphics->SubmitCommands();
         Display();
     }
 }
