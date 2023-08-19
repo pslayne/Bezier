@@ -87,6 +87,7 @@ void Bezier::Update()
     if (input->KeyPress(VK_DELETE)) {
         count = 0;
         index = 0;
+        curve_count = 0;
         graphics->ResetCommands();
         Display();
     }
@@ -145,7 +146,7 @@ void Bezier::Display()
     if (curve) {
         graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
         // graphics->CommandList()->DrawInstanced(dots, curve_count, 0, 0);
-        graphics->CommandList()->DrawInstanced(dots, curve_count, 0, 0);
+        graphics->CommandList()->DrawInstanced(dots*curve_count, curve_count, 0, dots);
     } 
     else {
         graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
