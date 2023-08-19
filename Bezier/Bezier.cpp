@@ -28,15 +28,17 @@ class Bezier : public App
 private:
     ID3D12RootSignature* rootSignature;
     ID3D12PipelineState* pipelineState;
+    ID3D12PipelineState* pipelineState1;
     Mesh* geometry;
+    Mesh* geometry1;
 
-    static const uint MaxVertex = 1000;
+    static const uint MaxVertex = 10000;
     Vertex controle[MaxVertex];
     uint count = 0;
     uint index = 0;
     
     static const int dots = 101;
-    Vertex curva[dots*MaxVertex];
+    Vertex curva[dots*100];
     bool curve = false;
     uint curve_count = 0;
 
@@ -65,6 +67,7 @@ void Bezier::Init()
 
     // cria malha 3D
     geometry = new Mesh(vbSize, sizeof(Vertex));
+    geometry1 = new Mesh(vbSize, sizeof(Vertex));
 
     // ---------------------------------------
 
@@ -120,11 +123,11 @@ void Bezier::Update()
         Display();
     }
 
-    if (input->KeyPress('B')) {
+    if (input->KeyPress('B') && count >= 4 && count % 2 == 0) {
         CubicCurve();
         curve_count++;
         graphics->ResetCommands();
-        graphics->Copy(curva, geometry->vertexBufferSize, geometry->vertexBufferUpload, geometry->vertexBufferGPU);
+        graphics->Copy(curva, geometry1->vertexBufferSize, geometry1->vertexBufferUpload, geometry1->vertexBufferGPU);
         graphics->SubmitCommands();
         curve = true;
         Display();
@@ -137,21 +140,21 @@ void Bezier::Display()
 {
     // limpa backbuffer
     graphics->Clear(pipelineState);
+    graphics->Clear(pipelineState1);
+
 
     // submete comandos de configuração do pipeline
     graphics->CommandList()->SetGraphicsRootSignature(rootSignature);
+    
+    graphics->CommandList()->SetPipelineState(pipelineState);
     graphics->CommandList()->IASetVertexBuffers(0, 1, geometry->VertexBufferView());
+    graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+    graphics->CommandList()->DrawInstanced(count, 1, 0, 0);
 
-    // submete comandos de desenho
-    if (curve) {
-        graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
-        // graphics->CommandList()->DrawInstanced(dots, curve_count, 0, 0);
-        graphics->CommandList()->DrawInstanced(dots*curve_count, curve_count, 0, dots);
-    } 
-    else {
-        graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-        graphics->CommandList()->DrawInstanced(count, 1, 0, 0);
-    }
+    graphics->CommandList()->SetPipelineState(pipelineState1);
+    graphics->CommandList()->IASetVertexBuffers(0, 1, geometry1->VertexBufferView());
+    graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
+    graphics->CommandList()->DrawInstanced(dots * curve_count, curve_count, 0, dots);
 
     // apresenta backbuffer
     graphics->Present();    
@@ -163,6 +166,7 @@ void Bezier::Finalize()
 {
     rootSignature->Release();
     pipelineState->Release();
+    pipelineState1->Release();
     delete geometry;
 }
 
@@ -293,7 +297,10 @@ void Bezier::BuildPipelineState()
     pso.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
     pso.SampleDesc.Count = graphics->Antialiasing();
     pso.SampleDesc.Quality = graphics->Quality();
+    
     graphics->Device()->CreateGraphicsPipelineState(&pso, IID_PPV_ARGS(&pipelineState));
+
+    graphics->Device()->CreateGraphicsPipelineState(&pso, IID_PPV_ARGS(&pipelineState1));
 
     vertexShader->Release();
     pixelShader->Release();
@@ -324,6 +331,8 @@ void Bezier::CubicCurve() {
 
         pontos[1].x = pontos[0].x + vectorX;
         pontos[1].y = pontos[0].y + vectorY;
+
+        // TO-DO: mostrar ponto auxiliar
     }
 
     int i = curve_count * dots;
