@@ -458,7 +458,7 @@ void Bezier::GenerateMarkingPoints() {
         float x = controle[i].Pos.x;
         float y = controle[i].Pos.y;
 
-        float r = 0.005f;
+        float r = 0.003f;
 
         markingPoints[j++] = { XMFLOAT3(x - r , y + r, 0.0f), XMFLOAT4(Colors::Red) };
         markingPoints[j++] = { XMFLOAT3(x + r , y + r, 0.0f), XMFLOAT4(Colors::Red) };
