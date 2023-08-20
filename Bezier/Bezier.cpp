@@ -32,13 +32,16 @@ private:
     Mesh* geometry;
     Mesh* geometry1;
     Mesh* geometry2;
+    Mesh* geometry3;
 
     static const uint MaxVertex = 10000;
     Vertex controle[MaxVertex];
+    Vertex markingPoints[6*MaxVertex];
     uint count = 0;
     uint index = 0;
     
     Vertex controleBuffer[MaxVertex];
+    Vertex markingPointsBuffer[6*MaxVertex];
     uint countBuffer = 0;
     uint indexBuffer = 0;
     
@@ -66,6 +69,7 @@ public:
     void BuildRootSignature();
     void BuildPipelineState();
 
+    void GenerateMarkingPoints();
     void CubicCurve();
 };
 
@@ -84,6 +88,7 @@ void Bezier::Init()
     geometry = new Mesh(vbSize, sizeof(Vertex));
     geometry1 = new Mesh(vbSize, sizeof(Vertex));
     geometry2 = new Mesh(vbSize, sizeof(Vertex));
+    geometry3 = new Mesh(vbSize, sizeof(Vertex));
 
     // ---------------------------------------
 
@@ -119,6 +124,10 @@ void Bezier::Update()
         countBuffer = count;
         indexBuffer = index;
 
+        for (int i = 0; i < count*6; i++) {
+            markingPointsBuffer[i] = markingPoints[i];
+        }
+
         for (int i = 0; i < curveCount; i++) {
             curvaBuffer[i] = curva[i];
         }
@@ -137,6 +146,10 @@ void Bezier::Update()
         count = countBuffer;
         index = indexBuffer;
 
+        for (int i = 0; i < countBuffer * 6; i++) {
+            markingPoints[i] = markingPointsBuffer[i];
+        }
+
         for (int i = 0; i < curveCountBuffer; i++) {
             curva[i] = curvaBuffer[i];
         }
@@ -151,6 +164,7 @@ void Bezier::Update()
         graphics->Copy(controle, geometry->vertexBufferSize, geometry->vertexBufferUpload, geometry->vertexBufferGPU);
         graphics->Copy(curva, geometry1->vertexBufferSize, geometry1->vertexBufferUpload, geometry1->vertexBufferGPU);
         graphics->Copy(auxiliares, geometry2->vertexBufferSize, geometry2->vertexBufferUpload, geometry2->vertexBufferGPU);
+        graphics->Copy(markingPoints, geometry3->vertexBufferSize, geometry3->vertexBufferUpload, geometry3->vertexBufferGPU);
         graphics->SubmitCommands();
         Display();
     }
@@ -179,17 +193,22 @@ void Bezier::Update()
         controle[index] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::Red) };
         index = (index + 1) % MaxVertex;
 
+        GenerateMarkingPoints();
+
         // copia vértices para o buffer da GPU usando o buffer de Upload
         graphics->ResetCommands();
         graphics->Copy(controle, geometry->vertexBufferSize, geometry->vertexBufferUpload, geometry->vertexBufferGPU);
+        graphics->Copy(markingPoints, geometry3->vertexBufferSize, geometry3->vertexBufferUpload, geometry3->vertexBufferGPU);
         
-        if (calcCurve) {
+        if (calcCurve && count >= 4 && count % 2 == 0) {
             CubicCurve();
             curveCount++;
             
             graphics->Copy(curva, geometry1->vertexBufferSize, geometry1->vertexBufferUpload, geometry1->vertexBufferGPU);
             graphics->Copy(auxiliares, geometry2->vertexBufferSize, geometry2->vertexBufferUpload, geometry2->vertexBufferGPU);
         }
+
+        //
        
         graphics->SubmitCommands();
 
@@ -219,6 +238,10 @@ void Bezier::Display()
     graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
     graphics->CommandList()->DrawInstanced(dots * curveCount, curveCount, 0, dots);
 
+    graphics->CommandList()->IASetVertexBuffers(0, 1, geometry3->VertexBufferView());
+    graphics->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    graphics->CommandList()->DrawInstanced(6 * count, count, 0, 6);
+
     // apresenta backbuffer
     graphics->Present();    
 }
@@ -230,6 +253,9 @@ void Bezier::Finalize()
     rootSignature->Release();
     pipelineState->Release();
     delete geometry;
+    delete geometry1;
+    delete geometry2;
+    delete geometry3;
 }
 
 
@@ -294,7 +320,7 @@ void Bezier::BuildPipelineState()
     // --------------------
 
     D3D12_RASTERIZER_DESC rasterizer = {};
-    rasterizer.FillMode = D3D12_FILL_MODE_WIREFRAME;
+    rasterizer.FillMode = D3D12_FILL_MODE_SOLID;
     rasterizer.CullMode = D3D12_CULL_MODE_NONE;
     rasterizer.FrontCounterClockwise = FALSE;
     rasterizer.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
@@ -424,6 +450,23 @@ void Bezier::CubicCurve() {
         float y = yp1 + yp2 + yp3 + yp4;
 
         curva[i] = { XMFLOAT3(x, y, 0.0f), XMFLOAT4(Colors::White) };
+    }
+}
+
+void Bezier::GenerateMarkingPoints() {
+    for (int i = 0, j = 0; i < count; i++) {
+        float x = controle[i].Pos.x;
+        float y = controle[i].Pos.y;
+
+        float r = 0.005f;
+
+        markingPoints[j++] = { XMFLOAT3(x - r , y + r, 0.0f), XMFLOAT4(Colors::Red) };
+        markingPoints[j++] = { XMFLOAT3(x + r , y + r, 0.0f), XMFLOAT4(Colors::Red) };
+        markingPoints[j++] = { XMFLOAT3(x + r , y - r, 0.0f), XMFLOAT4(Colors::Red) };
+                                            
+        markingPoints[j++] = { XMFLOAT3(x - r , y + r, 0.0f), XMFLOAT4(Colors::Red) };
+        markingPoints[j++] = { XMFLOAT3(x + r , y - r, 0.0f), XMFLOAT4(Colors::Red) };
+        markingPoints[j++] = { XMFLOAT3(x - r , y - r, 0.0f), XMFLOAT4(Colors::Red) };
     }
 }
 
